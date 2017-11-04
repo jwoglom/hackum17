@@ -51,7 +51,73 @@
   </div>
 
   <div class="section no-pad-bot light-green lighten-4" id="setup">
+    <div class="container">
+      <div class="section">
 
+        <!--   Icon Section   -->
+        <div class="row">
+          <div class="col s12 m4">
+            <div class="icon-block">
+              <h2 class="center blue-text"><i class="large material-icons">videogame_asset</i></h2>
+              <h3 class="center">Choose a ROM</h3>
+
+              <select id="rom-selector">
+                <option value="pokemon">Pokemon</option>
+                <option value="pokemon">Pokemon</option>
+                <option value="pokemon">Pokemon</option>
+                <option value="pokemon">Pokemon</option>
+                <option value="pokemon">Pokemon</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col s12 m4">
+            <div class="icon-block">
+              <h2 class="center blue-text"><i class="large material-icons">settings_remote</i></h2>
+              <h3 class="center">iClicker</h3>
+
+              <center>
+                <h5>Mode:</h5>
+                <div style="width: 150px">
+                  <select id="iclicker-mode">
+                    <option value="alphanumeric" default>Alphanumeric</option>
+                    <option value="alpha">Alpha</option>
+                  </select>
+                </div>
+              </center>
+              <br />
+              <br />
+
+              <center>
+                <h5>Channel:</h5>
+                <input type="text" maxlength="2" value="AB" pattern="[A-Da-d]{2}" class="iclicker-channel" id="iclicker-channel" />
+              </center>
+
+            </div>
+          </div>
+
+          <div class="col s12 m4">
+            <div class="icon-block">
+              <h2 class="center blue-text"><i class="large material-icons">settings</i></h2>
+              <h3 class="center">General Settings</h3>
+
+              <p class="light">We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <center>
+            <br />
+            <br />
+            <br />
+            <br />
+            <button id="start-button" class="btn-large waves-effect waves-light blue">Start Game</button>
+          </center>
+        </div>
+
+      </div>
+    </div>
   </div>
 
 
@@ -66,6 +132,12 @@
   <!--  Scripts-->
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="/static/materialize.js"></script>
+  <script type="text/javascript">
+    jQuery.noConflict();
+    jQuery(document).ready(function() {
+      jQuery('select').material_select();
+    });
+  </script>
   <script src="/static/main.js"></script>
 
   </body>

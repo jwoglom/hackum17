@@ -22,7 +22,15 @@ section:not(#welcome) {
 }
 
 #setup {
-	
+
+}
+
+input.iclicker-channel {
+	border: 0 !important;
+    font-size: 4em !important;
+    font-weight: bold;
+    width: 1.5em !important;
+    text-transform: uppercase;
 }
 
 #footer {

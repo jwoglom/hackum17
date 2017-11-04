@@ -4,9 +4,14 @@
 
     var socket = new WebSocket('ws://' + window.location.host + '/');
 
+    fixarea = function() {
+    	var textarea = $("textarea");
+		textarea.scrollTop = textarea.scrollHeight;
+    }
+
     socket.onopen = function open() {
       console.log('WebSockets connection created.');
-      $("#log").innerHTML += "WS connection created\n";
+      $("#log").innerHTML += "WS connection created\n";fixarea();
 
       sendMessage("message_back", {"text": "Hello from "+navigator.userAgent+" at "+(+new Date)});
     };
@@ -16,7 +21,7 @@
     		"type": type
     	}));
     	socket.send(str);
-    	$("#log").innerHTML += "sent: "+str+"\n";
+    	$("#log").innerHTML += "sent: "+str+"\n";fixarea();
     }
 
     startPoll = function() {
@@ -38,7 +43,7 @@
     socket.onmessage = function message(event) {
     	var data = JSON.parse(event.data);
     	console.log('MESSAGE DATA:', data);
-    	$("#log").innerHTML += "message: "+JSON.stringify(data)+"\n";
+    	$("#log").innerHTML += "message: "+JSON.stringify(data)+"\n";fixarea();
     }
 
     if (socket.readyState == WebSocket.OPEN) {
