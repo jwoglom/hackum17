@@ -18,21 +18,24 @@ $("#setup #start-button").onclick = function() {
 	$(".section#setup").style.display = 'none';
 	$(".section#game").style.display = 'block';
 	var channel = $("#iclicker-channel").value.toLowerCase();
-	var mode = $("#iclicker-mode").value;
+	var iclickerMode = $("#iclicker-mode").value;
+	var gameMode = $("#game-mode").value;
 	var rom = $("#rom-selector").value;
 	iclickerConfig = {
-		"poll_type": mode,
+		"poll_type": iclickerMode,
 		"channel": channel,
 		"name": rom.toUpperCase().substring(0, 8)
 	};
 
 	gameConfig = {
+		"mode": gameMode,
 		"platform": "gameboy",
 		"rom": rom
 	};
 
 	initWebsockets(function() {
 		startPoll(iclickerConfig);
+		initGame();
 	});
 }
 
@@ -83,7 +86,6 @@ handleMessage = function(data) {
 
 		if (data.status == 'started') {
 			$("#game .loading").style.display = 'none';
-			initGame();
 		}
 	}
 
