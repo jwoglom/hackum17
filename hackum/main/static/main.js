@@ -85,6 +85,8 @@ handleMessage = function(data) {
 		$("#loading-info").innerHTML += data.status+"\n";
 
 		if (data.status == 'started') {
+			updateUI();
+			$(".connect-popup").style.display = 'block';
 			$("#game .loading").style.display = 'none';
 		}
 	}
@@ -98,10 +100,83 @@ handleMessage = function(data) {
 	}
 }
 
+updateUI = function() {
+	$("#ui-remote-count").innerHTML = iclickerRemotes.length;
+	$("#ui-clicker-channel").innerHTML = iclickerConfig['channel'].toUpperCase();
+	$("#ui-mode").innerHTML = gameConfig['mode'];
+}
+
+
+addRemoteAction = function(message, secondary) {
+	var ra = $("#remote-actions");
+	ra.innerHTML += "<li class='collection-item'>" +
+	"<span>" + message + "</span>" +
+	"<span class='secondary-content'>" + secondary + "</span></li>";
+
+	ra.scrollTop = ra.scrollHeight;
+}
+
+clickerNewRemote = function(cid) {
+	if (iclickerRemotes.indexOf(cid) == -1) {
+		iclickerRemotes.push(cid);
+		updateUI();
+		addRemoteAction("New clicker joined!", cid);
+	}
+}
+
+var iclickerRemotes = [];
 handlePollResponse = function(resp) {
 	console.info("pollResponse", resp);
+	// clicker_id, click_time, response, seq_num
+	clickerNewRemote(resp.clicker_id)
+
+	// empty send
+	if ((""+resp.response).length > 0) {
+		addRemoteAction("Input: "+resp.response, resp.clicker_id);
+	}
 }
+
+
+var gameControlMap = {
+	"tetris": {
+		"uArrow": null,
+		"dArrow": null,
+		"lArrow": "C",
+		"rArrow": "D",
+		"aBtn": "A",
+		"bBtn": "B"
+	}
+}
+
+var gameControls;
+setUIControls = function() {
+	var objs = {
+		"uArrow": $(".d-pad-table .up-arrow"),
+		"dArrow": $(".d-pad-table .down-arrow"),
+		"lArrow": $(".d-pad-table .left-arrow"),
+		"rArrow": $(".d-pad-table .right-arrow"),
+		"aBtn": $(".d-pad-table .a-button"),
+		"bBtn": $(".d-pad-table .b-button")
+	};
+
+
+	for (btn in gameControls) {
+		if (btn != null) {
+			objs[btn].classList.remove('present');
+			if (gameControls[btn] != null) {
+				objs[btn].innerHTML = gameControls[btn];
+				objs[btn].classList.add('present');
+			}
+		}
+	}
+
+
+}
+
 
 initGame = function() {
 	console.debug("gameConfig", gameConfig);
+	gameControls = gameControlMap[gameConfig['rom']];
+
+	setUIControls();
 }

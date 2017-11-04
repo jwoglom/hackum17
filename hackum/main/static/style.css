@@ -33,6 +33,86 @@ input.iclicker-channel {
     text-transform: uppercase;
 }
 
+
+.loading {
+    position: fixed;
+    top: 77vh;
+    left: 35vw;
+    
+    height: 20vh;
+    width: 30vw;
+}
+
+.remote-count {
+    border: 1px solid black;
+    text-align: center;
+    width: 150px;
+}
+
+#ui-remote-count {
+    font-size: 42px;
+}
+
+.connect-popup {
+    display: none;
+    position: absolute;
+    top: 15vh;
+    left: 15vw;
+
+    height: 70vh;
+    width: 70vw;
+    z-index: 10;
+}
+
+.connect-popup ul, .connect-popul ul li {
+    list-style-type: initial !important;
+}
+
+.connect-popup ul li {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.iclicker-background {
+    display: inline-block;
+    background: url(/static/iclicker.png);
+    background-repeat: no-repeat;
+    height: 40vh;
+    background-size: auto 40vh;
+    background-position: center center;
+}
+
+#remote-actions {
+    height: 40vh;
+}
+
+#ui-mode {
+    font-size: 36px;
+    text-transform: uppercase;
+}
+
+table.d-pad-table {
+    empty-cells: hide;
+    border: 0;
+    width: auto;
+}
+.d-pad-table td {
+    width: 50px;
+    height: 50px;
+    border: 0;
+    margin: 0;
+    text-align: center;
+    vertical-align: middle
+} 
+.d-pad-table td.h {
+    border: 1px solid black;
+    font-weight: bold;
+    font-size: 1em;
+}
+.d-pad-table td.present {
+    background-color: #4CAF50;
+}
+
 #footer {
 	position: fixed;
 	bottom: 0;
