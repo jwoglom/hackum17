@@ -1,7 +1,34 @@
-h1 .iclicker {
+section:not(#welcome) {
+	display: none;
+}
+
+.section {
+	min-height: 97vh;
+}
+#welcome > .container {
+	margin-top: 25vh;
+}
+#welcome h1 {
+	color: #666666;
+}
+#welcome h1 .iclicker {
     background: url(https://www.iclicker.com/_img/ic-logo.svg);
     background-repeat: no-repeat;
     color: transparent;
     display: inline-block;
-    width: 293px;
+    width: 258px;
+    background-size: auto 53px;
+    background-position: center 5px;
+}
+
+#setup {
+	
+}
+
+#footer {
+	position: fixed;
+	bottom: 0;
+	width: 100vw;
+	height: 3vh;
+	padding-top: 5px;
 }
