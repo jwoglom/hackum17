@@ -9,3 +9,6 @@ def index(request):
 def send_get(request):
 	send_message({"get": request.GET.get('message')})
 	return HttpResponse("sent value of GET.message")
+
+def start_clicker_listener(request):
+	pass

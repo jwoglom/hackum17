@@ -8,8 +8,17 @@
       console.log('WebSockets connection created.');
       $("#log").innerHTML += "WS connection created\n";
 
-      socket.send("Hello from "+navigator.userAgent+" at "+(+new Date));
+      sendMessage("message_back", "Hello from "+navigator.userAgent+" at "+(+new Date));
     };
+
+    sendMessage = function(type, data) {
+    	var str = JSON.stringify({
+    		"type": type,
+    		"data": data
+    	});
+    	socket.send(str);
+    	$("#log").innerHTML += "sent: "+str+"\n";
+    }
 
     socket.onmessage = function message(event) {
     	var data = JSON.parse(event.data);
@@ -21,5 +30,7 @@
       socket.onopen();
     }
 </script>
-
+<button onclick="sendMessage('start_poll', '')">Start Poll</button>
+<button onclick='sendMessage("message_back", "Hello from "+navigator.userAgent+" at "+(+new Date));'>Send Ping</button>
+<br />
 <textarea style="width: 600px; height: 600px" id="log"></textarea>
