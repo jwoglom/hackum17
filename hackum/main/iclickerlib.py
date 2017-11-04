@@ -66,7 +66,7 @@ class Command(object):
 
     def _process_alphanumeric_clicker_response(self):
         ret = {'type': 'ClickerResponse', 'poll_type': 'alphanumeric'}
-        print("Alphanumeric", self.bytes[6:13])
+        print("Numeric", self.bytes[6:13])
         ret['clicker_id'] = self.clicker_id_from_bytes(self.bytes[3:6])
         resp = ''
         for i in range(6, 14):
@@ -100,8 +100,20 @@ class Command(object):
         return ret
 
     def _process_numeric_clicker_response(self):
-        ret = {'type': 'NClickerResponse', 'poll_type': 'numeric'}
+        ret = {'type': 'ClickerResponse', 'poll_type': 'numeric'}
+        print("Numeric", self.bytes[6:11])
+        ret['clicker_id'] = self.clicker_id_from_bytes(self.bytes[3:6])
+        resp = ''
+        """ There's some packing going on here for multiple numbers. This only works on the first digit. TODO. """
+        for i in range(6, 9):
+            # 33, 17, 17, 17, 79
+            numlist = [33, 49, 65, 81, 97, 113, 129, 145, 161, 177]
+            # - = 209
+            if self.bytes[i] in numlist:
+                resp += str(numlist.index(self.bytes[i]))
 
+        ret['response'] = resp
+        ret['seq_num'] = self.bytes[11]
         return ret
 
     def info(self):
@@ -119,9 +131,6 @@ class Command(object):
                 ret['type'] = 'StartPolling'
             if byte1 == 0x12:
                 ret['type'] = 'StopPolling'
-            if byte1 == 0x14:
-                # first packet of numeric
-                ret.update(self._process_numeric_clicker_response())
             if byte1 == 0x18:
                 if self.bytes[2] == 0x01 and self.bytes[3] == 0x00:
                     ret['type'] = 'ResetBase'
@@ -134,7 +143,7 @@ class Command(object):
             if byte1 == 0x13:
                 ret.update(self._process_alpha_clicker_response())
             if byte1 == 0x1a:
-                pass
+                ret.update(self._process_numeric_clicker_response())
             if byte1 == 0x1b:
                 # first byte of alphanumeric
                 ret.update(self._process_alphanumeric_clicker_response())
