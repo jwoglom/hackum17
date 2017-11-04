@@ -64,10 +64,51 @@ class Command(object):
         
         return ret
 
+    def _process_alphanumeric_clicker_response(self):
+        ret = {'type': 'ClickerResponse', 'poll_type': 'alphanumeric'}
+        print("Alphanumeric", self.bytes[6:13])
+        ret['clicker_id'] = self.clicker_id_from_bytes(self.bytes[3:6])
+        resp = ''
+        for i in range(6, 14):
+            ch = -1
+            # , +, -, -, _, ^, E, 0, 1, ...
+            chmap = [ord(' '), ord('+'), ord('-'), ord('-'), ord('_'), ord('^'), ord('E')]
+            if self.bytes[i] >= 2 and self.bytes[i] <= 28:
+                ch = 62 + self.bytes[i]
+            elif self.bytes[i] == 29:
+                ch = ord(' ')
+            elif self.bytes[i] == 30:
+                ch = ord('+')
+            elif self.bytes[i] == 31:
+                ch = ord('-')
+            elif self.bytes[i] == 44:
+                ch = ord('-')
+            elif self.bytes[i] == 45:
+                ch = ord('_')
+            elif self.bytes[i] == 46:
+                ch = ord('^')
+            elif self.bytes[i] == 33:
+                ch = ord('E')
+            elif self.bytes[i] >= 34 and self.bytes <= 43:
+                ch = 48 + self.bytes[i] - 34
+            else:
+                break
+            resp += chr(ch)
+
+        ret['response'] = resp
+        ret['seq_num'] = self.bytes[14]
+        return ret
+
+    def _process_numeric_clicker_response(self):
+        ret = {'type': 'NClickerResponse', 'poll_type': 'numeric'}
+
+        return ret
+
     def info(self):
         """ return all the information we know about the command """
         byte0 = self.bytes[0]
         byte1 = self.bytes[1]
+        print("byte0", byte0, "byte1", byte1)
         ret = { 'type': 'unknown', 'raw_command': self.__repr__() }
         if byte0 == 0x01:
             if byte1 == 0x10:
@@ -78,6 +119,9 @@ class Command(object):
                 ret['type'] = 'StartPolling'
             if byte1 == 0x12:
                 ret['type'] = 'StopPolling'
+            if byte1 == 0x14:
+                # first packet of numeric
+                ret.update(self._process_numeric_clicker_response())
             if byte1 == 0x18:
                 if self.bytes[2] == 0x01 and self.bytes[3] == 0x00:
                     ret['type'] = 'ResetBase'
@@ -91,6 +135,9 @@ class Command(object):
                 ret.update(self._process_alpha_clicker_response())
             if byte1 == 0x1a:
                 pass
+            if byte1 == 0x1b:
+                # first byte of alphanumeric
+                ret.update(self._process_alphanumeric_clicker_response())
 
         return ret
 
@@ -106,6 +153,7 @@ class Command(object):
         if info2['type'] == 'ClickerResponse':
             ret.append(info2)
 
+        print("RESINFO:", info1, info2)
         return ret
         
 
@@ -343,12 +391,13 @@ class Response(object):
         return "{0}: {1} ({2} at {3})".format(self.clicker_id, self.response, self.seq_num, self.click_time)
     
 class IClickerPoll(object):
-    def __init__(self, iclicker_base):
+    def __init__(self, iclicker_base, response_callback=None):
         self.base = iclicker_base
         self.STOP_POLL = False
         self.should_print = True
         self.poll_start_time = 0
         self.responses = defaultdict(list)
+        self.response_callback = response_callback
 
     def update_display(self):
         """ updates the base display according to the poll results """
@@ -427,6 +476,8 @@ class IClickerPoll(object):
         if response not in self.responses[response.clicker_id]:
             self.responses[response.clicker_id].append(response)
             self.print_response(response)
+            if self.response_callback:
+                self.response_callback(response)
 
     def get_most_recent_responses(self):
         """ returns a list of the most recent responses """
