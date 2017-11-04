@@ -26,9 +26,6 @@ def ws_message(message):
 
     if mtype == "start_poll":
         print("StartPoll received:", message.content)
-        Group('users').send({
-            "text": json.dumps({"before": "bar"})
-        })
         try:
             start_poll(message.reply_channel)
         except Exception as e:

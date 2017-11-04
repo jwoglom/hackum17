@@ -6,24 +6,35 @@ import signal
 import threading
 
 
+def response_callback(response):
+    send_message({
+        "type": "poll_response",
+        "response": {
+            "clicker_id": response.clicker_id,
+            "response": response.response,
+            "seq_num": response.seq_num,
+            "click_time": response.click_time
+        }
+    })
+
 poll = None
 def start_poll(reply_channel):
+    stop_poll()
+
     print('Trying to start the IClicker poll')
-    Group('users').send({
-        "text": json.dumps({"foo": "bar"})
+    send_message({
+        "type": "poll_init",
+        "status": "trying"
     })
 
     log.setLevel(0)
     poll_type = 'alpha'
     poll_duration = False
-    freq1 = 'a'
-    freq2 = 'b'
-    welcome_msg = 'WELCOME'
     #
     # Initiate the polling
     #
     print('Finding iClicker base...')
-    reply_send(reply_channel, {
+    send_message({
         "type": "poll_init",
         "status": "finding"
     })
@@ -35,13 +46,11 @@ def start_poll(reply_channel):
         "type": "poll_init",
         "status": "initializing"
     })
-    base.initialize(freq1, freq2, welcome_msg)
+    base.initialize('a', 'b', 'POKEMON')
         
     # If we have successfully started a poll, set up a signal handler
     # to clean up when we get a SIGINT (ctrl+c or kill) command
-    poll = IClickerPoll(base)
-    
-    #signal.signal(signal.SIGINT, lambda *x: close_pole(poll))
+    poll = IClickerPoll(base, response_callback)
     
     print('Poll started!')
     send_message({
@@ -56,4 +65,9 @@ def start_poll(reply_channel):
     stop_timer.cancel()
     
 def stop_poll():
-    close_pole(poll)
+    if poll:
+        close_pole(poll)
+
+def handle_sigint():
+    print("Handling SIGINT")
+    stop_poll()

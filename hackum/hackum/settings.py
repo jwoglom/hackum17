@@ -135,3 +135,6 @@ CHANNEL_LAYERS = {
         'ROUTING': 'main.routing.channel_routing',
     }
 }
+
+#import signal, main
+#signal.signal(signal.SIGINT, lambda *x: main.pollcommands.handle_sigint())
