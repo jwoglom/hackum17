@@ -6,6 +6,9 @@ from main.shortcuts import send_message
 def index(request):
 	return render(request, 'index.html')
 
+def websocket_demo(request):
+	return render(request, 'websocket-demo.html')
+
 def send_get(request):
 	send_message({"get": request.GET.get('message')})
 	return HttpResponse("sent value of GET.message")
