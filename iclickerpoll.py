@@ -490,7 +490,7 @@ if __name__ == '__main__':
         if freq1 not in ('a', 'b', 'c', 'd') or freq2 not in ('a', 'b', 'c', 'd'):
             raise ValueError("Frequency combintation '{0}{1}' is not valid".format(freq1, freq2))
 
-    welcome_msg = None
+    welcome_msg = "WELCOME"
     if args.welcome_msg:
         welcome_msg = args.welcome_msg
 

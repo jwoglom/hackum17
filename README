@@ -1,7 +1,0 @@
-hackum17
-========
-
-* pip install pyusb
-* For Windows, install http://zadig.akeo.ie/
-* Choose "iClicker Base" and install the libusb-win32 driver
-
