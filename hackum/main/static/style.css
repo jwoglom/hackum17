@@ -1,4 +1,4 @@
-section:not(#welcome) {
+body > div.section:not(#welcome) {
 	display: none;
 }
 

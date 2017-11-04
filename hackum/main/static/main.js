@@ -2,8 +2,8 @@ window.$ = document.querySelector.bind(document);
 window.$$ = document.querySelectorAll.bind(document);
 
 $("#welcome #start-button").onclick = function() {
-	$("#welcome").style.display = 'none';
-	$("#setup").style.display = '';
+	$(".section#welcome").style.display = 'none';
+	$(".section#setup").style.display = 'block';
 }
 
 $("#setup #iclicker-channel").addEventListener("keypress", function(evt) {
@@ -12,19 +12,27 @@ $("#setup #iclicker-channel").addEventListener("keypress", function(evt) {
     }
 });
 
-
+var iclickerConfig;
+var gameConfig;
 $("#setup #start-button").onclick = function() {
+	$(".section#setup").style.display = 'none';
+	$(".section#game").style.display = 'block';
 	var channel = $("#iclicker-channel").value.toLowerCase();
 	var mode = $("#iclicker-mode").value;
 	var rom = $("#rom-selector").value;
-	var config = {
+	iclickerConfig = {
 		"poll_type": mode,
 		"channel": channel,
 		"name": rom.toUpperCase().substring(0, 8)
 	};
 
+	gameConfig = {
+		"platform": "gameboy",
+		"rom": rom
+	};
+
 	initWebsockets(function() {
-		startPoll(config);
+		startPoll(iclickerConfig);
 	});
 }
 
@@ -69,11 +77,29 @@ sendPing = function() {
 }
 
 handleMessage = function(data) {
+	console.debug("message", data.type);
 	if (data.type == 'poll_init') {
 		$("#loading-info").innerHTML += data.status+"\n";
+
+		if (data.status == 'started') {
+			$("#game .loading").style.display = 'none';
+			initGame();
+		}
 	}
 
 	if (data.type == 'start_poll_error') {
 		$("#loading-info").innerHTML += data.text+"\n";	
 	}
+
+	if (data.type == 'poll_response') {
+		handlePollResponse(data.response);
+	}
+}
+
+handlePollResponse = function(resp) {
+	console.info("pollResponse", resp);
+}
+
+initGame = function() {
+	console.debug("gameConfig", gameConfig);
 }
