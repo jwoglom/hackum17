@@ -27,18 +27,21 @@ def ws_message(message):
     if mtype == "start_poll":
         print("StartPoll received:", message.content)
         try:
-            start_poll(message.reply_channel)
+            start_poll(msg['poll_type'], msg['channel'], msg['name'].upper())
         except Exception as e:
             send_message({
                 'type': 'start_poll_error',
                 'text': str(e) 
             })
             raise e
-    #elif mtype == "message_back":
-    send_message({
-        'type': 'message_back_response',
-        'text': message.content['text']
-    })
+    elif mtype == "stop_poll":
+        print("StopPoll received:", message.content)
+        ws_stop_poll(message)
+    elif mtype == "message_back":
+        send_message({
+            'type': 'message_back_response',
+            'text': message.content['text']
+        })
 
 
 def ws_stop_poll(message):

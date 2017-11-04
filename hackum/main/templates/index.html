@@ -8,16 +8,31 @@
       console.log('WebSockets connection created.');
       $("#log").innerHTML += "WS connection created\n";
 
-      sendMessage("message_back", "Hello from "+navigator.userAgent+" at "+(+new Date));
+      sendMessage("message_back", {"text": "Hello from "+navigator.userAgent+" at "+(+new Date)});
     };
 
     sendMessage = function(type, data) {
-    	var str = JSON.stringify({
-    		"type": type,
-    		"data": data
-    	});
+    	var str = JSON.stringify(Object.assign(data, {
+    		"type": type
+    	}));
     	socket.send(str);
     	$("#log").innerHTML += "sent: "+str+"\n";
+    }
+
+    startPoll = function() {
+    	sendMessage('start_poll', {
+    		"poll_type": "alphanumeric",
+    		"channel": "ab",
+    		"name": "Pokemon"
+    	});
+    }
+
+    stopPoll = function() {
+    	sendMessage('stop_poll', {});
+    }
+
+    sendPing = function() {
+    	sendMessage('message_back', "Hello from "+navigator.userAgent+" at "+(+new Date));
     }
 
     socket.onmessage = function message(event) {
@@ -30,7 +45,8 @@
       socket.onopen();
     }
 </script>
-<button onclick="sendMessage('start_poll', '')">Start Poll</button>
-<button onclick='sendMessage("message_back", "Hello from "+navigator.userAgent+" at "+(+new Date));'>Send Ping</button>
+<button onclick="startPoll()">Start Poll</button>
+<button onclick="stopPoll()">Stop Poll</button>
+<button onclick="sendPing()">Send Ping</button>
 <br />
 <textarea style="width: 600px; height: 600px" id="log"></textarea>

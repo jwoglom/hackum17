@@ -18,7 +18,7 @@ def response_callback(response):
     })
 
 poll = None
-def start_poll(reply_channel):
+def start_poll(poll_type, channel_str='ab', name='WELCOME'):
     stop_poll()
 
     print('Trying to start the IClicker poll')
@@ -28,7 +28,7 @@ def start_poll(reply_channel):
     })
 
     log.setLevel(0)
-    poll_type = 'alpha'
+    poll_type = 'alphanumeric'
     poll_duration = False
     #
     # Initiate the polling
@@ -46,7 +46,7 @@ def start_poll(reply_channel):
         "type": "poll_init",
         "status": "initializing"
     })
-    base.initialize('a', 'b', 'POKEMON')
+    base.initialize(channel_str[0], channel_str[1], name)
         
     # If we have successfully started a poll, set up a signal handler
     # to clean up when we get a SIGINT (ctrl+c or kill) command

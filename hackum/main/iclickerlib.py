@@ -89,7 +89,7 @@ class Command(object):
                 ch = ord('^')
             elif self.bytes[i] == 33:
                 ch = ord('E')
-            elif self.bytes[i] >= 34 and self.bytes <= 43:
+            elif self.bytes[i] >= 34 and self.bytes[i] <= 43:
                 ch = 48 + self.bytes[i] - 34
             else:
                 break
