@@ -10,7 +10,7 @@ For Windows:
 * pip install -r requirements.txt
 * Install redis in WSL (bash.exe); apt-get install redis-server
 * Run redis in WSL (redis-server)
-
+* ./manage.py runserver on port 8000
 
 Linux/Mac:
 * mkvirtualenv hackum17 --python=$(which python3)

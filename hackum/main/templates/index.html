@@ -1,16 +1,25 @@
 <script>
-    var socket = new WebSocket('ws://' + window.location.host + '/users/');
+	window.$ = document.querySelector.bind(document);
+	window.$$ = document.querySelectorAll.bind(document);
+
+    var socket = new WebSocket('ws://' + window.location.host + '/');
 
     socket.onopen = function open() {
       console.log('WebSockets connection created.');
+      $("#log").innerHTML += "WS connection created\n";
+
+      socket.send("Hello from "+navigator.userAgent+" at "+(+new Date));
     };
 
     socket.onmessage = function message(event) {
     	var data = JSON.parse(event.data);
     	console.log('MESSAGE DATA:', data);
+    	$("#log").innerHTML += "message: "+JSON.stringify(data)+"\n";
     }
 
     if (socket.readyState == WebSocket.OPEN) {
       socket.onopen();
     }
 </script>
+
+<textarea style="width: 600px; height: 600px" id="log"></textarea>

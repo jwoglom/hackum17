@@ -17,3 +17,11 @@ def ws_disconnect(message):
     })
 	Group('users').discard(message.reply_channel)
 
+def ws_message(message):
+	print("WS Received:", message.content)
+	Group('users').send({
+		"text": json.dumps({
+			'type': 'message_back',
+			'text': message.content['text']
+		})
+	})
