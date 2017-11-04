@@ -63,7 +63,7 @@ function windowingInitialize() {
 	    }
 	}
 	var client = new HttpClient();
-	client.get("/roms/tetris.txt", function(response) {
+	client.get("/static/roms/tetris.txt", function(response) {
 	    // do something with response
 	    datauri = response;
 	    if (datauri != null && datauri.length > 0) {
@@ -71,7 +71,7 @@ function windowingInitialize() {
 				cout(Math.floor(datauri.length * 3 / 4) + " bytes of data submitted by form (text length of " + datauri.length + ").", 0);
 				initPlayer();
 				start(mainCanvas, base64_decode(datauri));
-				fullscreenPlayer();
+				//fullscreenPlayer();
 			}
 			catch (error) {
 				alert(error.message + " file: " + error.fileName + " line: " + error.lineNumber);
