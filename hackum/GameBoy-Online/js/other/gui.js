@@ -63,7 +63,7 @@ function windowingInitialize() {
 	    }
 	}
 	var client = new HttpClient();
-	client.get("/roms/pkmn.txt", function(response) {
+	client.get("/roms/tetris.txt", function(response) {
 	    // do something with response
 	    datauri = response;
 	    if (datauri != null && datauri.length > 0) {
@@ -78,9 +78,6 @@ function windowingInitialize() {
 			}
 		}
 	});
-
-    // start(mainCanvas, );
-    // fullScerenPlayer();
 }
 function registerGUIEvents() {
 	cout("In registerGUIEvents() : Registering GUI Events.", -1);
