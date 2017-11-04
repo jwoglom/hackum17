@@ -108,3 +108,4 @@ venv.bak/
 *.gbc
 *.gb
 roms/
+dump.rdb

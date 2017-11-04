@@ -31,7 +31,7 @@ def ws_message(message):
         except Exception as e:
             send_message({
                 'type': 'start_poll_error',
-                'text': str(e) 
+                'text': str(e)
             })
             raise e
     elif mtype == "stop_poll":
