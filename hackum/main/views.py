@@ -1,16 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from channels import Group
-import json
+from main.shortcuts import send_message
 
 # Create your views here.
 def index(request):
 	return render(request, 'index.html')
 
-def send_message(request):
-	Group('users').send({
-		'text': json.dumps({
-			'message': "foo"
-		})
-	})
-	return HttpResponse("sent value")
+def send_get(request):
+	send_message({"get": request.GET.get('message')})
+	return HttpResponse("sent value of GET.message")

@@ -1,7 +1,7 @@
 from django.conf.urls import url
-from main.views import index, send_message
+from main.views import index, send_get
 
 urlpatterns = [
 	url(r'^$', index, name='index'),
-	url(r'^send_message$', send_message, name='send_message')
+	url(r'^send_get$', send_get, name='send_get')
 ]
