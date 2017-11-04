@@ -40,6 +40,7 @@ initWebsockets = function(cb) {
     socket.onmessage = function message(event) {
     	var data = JSON.parse(event.data);
     	console.log('onMessage', data);
+    	handleMessage(data);
     }
 
     if (socket.readyState == WebSocket.OPEN) {
@@ -65,4 +66,14 @@ stopPoll = function() {
 
 sendPing = function() {
 	sendMessage('message_back', "Hello from "+navigator.userAgent+" at "+(+new Date));
+}
+
+handleMessage = function(data) {
+	if (data.type == 'poll_init') {
+		$("#loading-info").innerHTML += data.status+"\n";
+	}
+
+	if (data.type == 'start_poll_error') {
+		$("#loading-info").innerHTML += data.text+"\n";	
+	}
 }
