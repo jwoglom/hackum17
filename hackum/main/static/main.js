@@ -142,6 +142,7 @@ var keyHoldKey = {
 
 var keyHitTime = 200;
 var oneCharacterResponses = true; // truncate manual responses to one character
+var allowingiClickerInput = true;
 
 var iclickerHandledResponses = [];
 
@@ -346,10 +347,15 @@ handlePollResponse = function(resp) {
 		var gcontrol = ctrlOp[resp.response];
 		if (gcontrol != null) {
 			console.log("resp:"+resp.response+" ctrl:"+gcontrol);
-			hitKey(gcontrol);
+			if (allowingiClickerInput) {
+				hitKey(gcontrol);
 
-			var gcontrolNice = gcontrol.substring(0, 1).toUpperCase()+gcontrol.substring(1);
-			addRemoteAction(""+resp.response+" ("+gcontrolNice+")", resp.clicker_id);
+				var gcontrolNice = gcontrol.substring(0, 1).toUpperCase()+gcontrol.substring(1);
+				addRemoteAction(""+resp.response+" ("+gcontrolNice+")", resp.clicker_id);
+			} else {
+				var gcontrolNice = gcontrol.substring(0, 1).toUpperCase()+gcontrol.substring(1);
+				addRemoteAction("[PAUSED] "+resp.response+" ("+gcontrolNice+")", resp.clicker_id);
+			}
 		}
 
 		
@@ -552,4 +558,14 @@ updateChart = function() {
 	chart.data.labels = ndata.labels;
 	chart.data.datasets = ndata.datasets;
 	chart.update({'duration': 0});
+}
+
+toggleInputs = function() {
+	if (allowingiClickerInput) {
+		allowingiClickerInput = false;
+		$("#pause-inputs").innerHTML = "Allow Inputs";
+	} else {
+		allowingiClickerInput = true;
+		$("#pause-inputs").innerHTML = "Pause Inputs";
+	}
 }
