@@ -76,8 +76,9 @@
           <div class="col s12 m4">
             <div class="icon-block">
               <h2 class="center blue-text"><i class="large material-icons">videogame_asset</i></h2>
-              <h3 class="center">Choose a ROM</h3>
+              <h3 class="center">Game</h3>
 
+              <h5>Choose a ROM:</h5>
               <select id="rom-selector">
               </select>
             </div>
@@ -87,6 +88,21 @@
             <div class="icon-block">
               <h2 class="center blue-text"><i class="large material-icons">settings_remote</i></h2>
               <h3 class="center">iClicker</h3>
+
+
+              <center>
+                <h5>Channel:</h5>
+                <input type="text" maxlength="2" value="DD" pattern="[A-Da-d]{2}" class="iclicker-channel" id="iclicker-channel" />
+              </center>
+
+            </div>
+          </div>
+
+          <div class="col s12 m4">
+            <div class="icon-block">
+              <h2 class="center blue-text"><i class="large material-icons">settings</i></h2>
+              <h3 class="center">Responses</h3>
+
 
               <center>
                 <h5>Response Mode:</h5>
@@ -100,27 +116,16 @@
               <br />
               <br />
 
-              <center>
-                <h5>Channel:</h5>
-                <input type="text" maxlength="2" value="DD" pattern="[A-Da-d]{2}" class="iclicker-channel" id="iclicker-channel" />
-              </center>
-
-            </div>
-          </div>
-
-          <div class="col s12 m4">
-            <div class="icon-block">
-              <h2 class="center blue-text"><i class="large material-icons">settings</i></h2>
-              <h3 class="center">General Settings</h3>
-
-              <center>
-                <h5>Game Mode:</h5>
-                <div class="width: 150px">
-                  <select id="game-mode">
-                    <option value="anarchy">Anarchy</option>
-                  </select>
-                </div>
-              </center>
+              <div style="display: none">
+                <center>
+                  <h5>Game Mode:</h5>
+                  <div class="width: 150px">
+                    <select id="game-mode">
+                      <option value="anarchy">Anarchy</option>
+                    </select>
+                  </div>
+                </center>
+              </div>
             </div>
           </div>
         </div>
@@ -412,6 +417,7 @@
                   <td class='h b-button'>.</td>
                 </tr>
               </table>
+              <p class="above-e-message">To submit letters above <b>E</b>, use the up and down arrow keys and then hit <b>SEND</b>. Use <b>DELETE</b> to clear.</p>
             </div>
 
             <div class="col s12 m3">
@@ -443,6 +449,7 @@
         </div>
       </div>
     </div>
+  </div>
 
 
 

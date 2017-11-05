@@ -40,14 +40,14 @@ var gameRomConfigs = {
 		"gameTitle": "Pokemon Gold",
 		"platform": "gameboy",
 		"controlMap": {
-			"up": "A",
-			"down": "B",
-			"left": "C",
-			"right": "D",
-			"a": null,
-			"b": null,
-			"select": null,
-			"start": "E"
+			"up": "C",
+			"down": "F",
+			"left": "D",
+			"right": "E",
+			"a": "A",
+			"b": "B",
+			"select": "G",
+			"start": "H"
 		},
 		"holdKey": false
 	},
@@ -57,14 +57,14 @@ var gameRomConfigs = {
 		"gameTitle": "Pokemon Yellow",
 		"platform": "gameboy",
 		"controlMap": {
-			"up": "A",
-			"down": "B",
-			"left": "C",
-			"right": "D",
-			"a": null,
-			"b": null,
-			"select": null,
-			"start": "E"
+			"up": "C",
+			"down": "F",
+			"left": "D",
+			"right": "E",
+			"a": "A",
+			"b": "B",
+			"select": "G",
+			"start": "H"
 		},
 		"holdKey": false
 	},
@@ -83,8 +83,25 @@ var gameRomConfigs = {
 			"select": null,
 			"start": null
 		},
+		"holdKey": false
+	},
+	"tennis": {
+		"romName": "tennis",
+		"romFile": "/static/roms/tennis.txt",
+		"gameTitle": "Tennis",
+		"platform": "gameboy",
+		"controlMap": {
+			"up": null,
+			"down": "E",
+			"left": "C",
+			"right": "D",
+			"a": "A",
+			"b": "B",
+			"select": null,
+			"start": null
+		},
 		"holdKey": false // only arrow
-	}
+	},
 };
 var gamePlatforms = {
 	"gameboy": {
@@ -124,6 +141,7 @@ var keyHoldKey = {
 };
 
 var keyHitTime = 200;
+var oneCharacterResponses = true; // truncate manual responses to one character
 
 var iclickerHandledResponses = [];
 
@@ -298,13 +316,18 @@ handlePollResponse = function(resp) {
 		return;
 	}
 	iclickerHandledResponses.push(resp);
+
+
+	if (oneCharacterResponses && resp.response.length > 1) {
+		resp.response = resp.response.substring(0, 1)
+	}
+
 	console.info("pollResponse", resp);
 	// clicker_id, click_time, response, seq_num
 	clickerNewRemote(resp.clicker_id)
 
 	// empty send
 	if ((""+resp.response).length > 0) {
-		addRemoteAction("Input: "+resp.response, resp.clicker_id);
 
 		iclickerHistory[resp.clicker_id].push({
 			"time": new Date(),
@@ -322,7 +345,12 @@ handlePollResponse = function(resp) {
 		if (gcontrol != null) {
 			console.log("resp:"+resp.response+" ctrl:"+gcontrol);
 			hitKey(gcontrol);
+
+			var gcontrolNice = gcontrol.substring(0, 1).toUpperCase()+gcontrol.substring(1);
+			addRemoteAction(""+resp.response+" ("+gcontrolNice+")", resp.clicker_id);
 		}
+
+		
 	}
 
 
@@ -369,18 +397,28 @@ resetHitList = function() {
 setUIControls = function() {
 	var objs = gameControlObjs;
 
-
 	for (btn in gameRomConfig['controlMap']) {
 		if (btn != null) {
 			objs[btn].classList.remove('present');
 			if (gameRomConfig['controlMap'][btn] != null) {
 				objs[btn].innerHTML = gameRomConfig['controlMap'][btn];
 				objs[btn].classList.add('present');
+
+				if (gameRomConfig['controlMap'][btn] > 'E') {
+					$(".above-e-message").style.display = 'block';
+				}
 			}
 		}
 	}
+}
 
-
+resetUIControls = function() {
+	for (btn in gameControlObjs) {
+		if (btn != null) {
+			gameControlObjs[btn].classList.remove('present');
+			gameControlObjs[btn].innerHTML = '.';
+		}
+	}
 }
 
 initGame = function() {
@@ -395,10 +433,11 @@ initGame = function() {
 		"a": $(".d-pad-table .a-button"),
 		"b": $(".d-pad-table .b-button"),
 		"select": $(".d-pad-table .select-button"),
-		"start": $(".d-pad-table .start-button"),
-		
+		"start": $(".d-pad-table .start-button"),	
 	};
 
+
+	resetUIControls();
 	setUIControls();
 
 	generateChart();
@@ -427,7 +466,9 @@ backButton = function() {
 	iclickerHandledResponses = [];
 	iclickerRemotes = [];
 	iclickerHistory = [];
+	resetUIControls();
 	$("#remote-actions").innerHTML = '';
+	$(".above-e-message").style.display = 'none';
 	$(".section#welcome").style.display = 'block';
 
 }

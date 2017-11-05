@@ -1,3 +1,19 @@
+body {
+    background: url(/static/gboy.png);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-color: #c1c3c5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.light-green.lighten-4 {
+    background-color: rgba(220, 237, 200, 0.7) !important;
+}
+
 body > div.section:not(#welcome) {
 	display: none;
 }
@@ -16,9 +32,9 @@ body > div.section:not(#welcome) {
     background-repeat: no-repeat;
     color: transparent;
     display: inline-block;
-    width: 258px;
-    background-size: auto 53px;
-    background-position: center 5px;
+    width: 269px;
+    background-size: auto 55px;
+    background-position: center 7.5px;
 }
 
 #setup {
@@ -135,6 +151,10 @@ table.d-pad-table {
 .chart-container {
     width: 30vw;
     height: 30vh;
+}
+
+.above-e-message {
+    display: none;
 }
 
 #footer {
