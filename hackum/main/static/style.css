@@ -118,6 +118,12 @@ table.d-pad-table {
     background-color: #00E676;
 }
 
+.d-pad-table td.btn-indicator {
+    font-size: 0.7em;
+    vertical-align: bottom !important;
+    padding-bottom: 0;
+}
+
 #mainCanvas {
     width: 50vw;
     height: 50vh;

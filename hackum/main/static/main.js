@@ -136,7 +136,13 @@ sendPing = function() {
 handleMessage = function(data) {
 	console.debug("message", data.type);
 	if (data.type == 'poll_init') {
-		$("#loading-info").innerHTML += data.status+"\n";
+		var statuses = {
+			"trying": "Initializing USB driver...",
+			"finding": "Looking for base station...",
+			"initializing": "Initializing iClicker base..."
+		};
+
+		$("#loading-info").innerHTML += (statuses[data.status] == null ? data.status : statuses[data.status])+"\n";
 
 		if (data.status == 'started') {
 			updateUI();
