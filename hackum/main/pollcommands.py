@@ -3,8 +3,6 @@ from main.shortcuts import send_message, reply_send
 import json
 from channels import Group
 import signal
-import threading
-import multiprocessing
 
 
 def response_callback(response):
@@ -19,25 +17,6 @@ def response_callback(response):
     })
 
 def start_poll(poll_type, channel_str='ab', name='WELCOME'):
-    manager = multiprocessing.Manager()
-    ns = manager.Namespace()
-
-    running = True
-    try:
-        ns.pollRunning
-    except AttributeError:
-        running = False
-        pass
-
-
-    if running:
-        print('Poll already running?')
-        send_message({
-            "type": "poll_init",
-            "status": "already_running"
-        })
-        return
-
     print('Trying to start the IClicker poll')
     send_message({
         "type": "poll_init",

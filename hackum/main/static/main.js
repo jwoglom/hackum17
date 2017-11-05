@@ -14,7 +14,8 @@ var gameRomConfigs = {
 			"right": "D",
 			"a": "A",
 			"b": "B"
-		}
+		},
+		"holdKey": false
 	},
 	"snake": {
 		"romName": "snake",
@@ -30,7 +31,8 @@ var gameRomConfigs = {
 			"b": null,
 			"select": null,
 			"start": "E"
-		}
+		},
+		"holdKey": true
 	},
 	"pokemong": {
 		"romName": "pokemong",
@@ -46,7 +48,8 @@ var gameRomConfigs = {
 			"b": null,
 			"select": null,
 			"start": "E"
-		}
+		},
+		"holdKey": false
 	},
 	"pokemony": {
 		"romName": "pokemony",
@@ -62,7 +65,8 @@ var gameRomConfigs = {
 			"b": null,
 			"select": null,
 			"start": "E"
-		}
+		},
+		"holdKey": false
 	},
 	"marioland": {
 		"romName": "marioland",
@@ -78,7 +82,8 @@ var gameRomConfigs = {
 			"b": "B",
 			"select": null,
 			"start": null
-		}
+		},
+		"holdKey": false // only arrow
 	}
 };
 var gamePlatforms = {
@@ -97,8 +102,20 @@ var currentlyHitList = {
 	"select": 0,
 	"start": 0
 };
+var keyHoldKey = {
+	"up": true,
+	"down": true,
+	"left": true,
+	"right": true,
+	"a": false,
+	"b": false,
+	"select": false,
+	"start": false
+}
 
-var keyHitTime = 250;
+var keyHitTime = 200;
+
+var iclickerHandledResponses = [];
 
 var gameRomConfig; // set dynamically
 var gameControlObjs;
@@ -267,6 +284,10 @@ clickerNewRemote = function(cid) {
 }
 
 handlePollResponse = function(resp) {
+	if (iclickerHandledResponses.indexOf(resp) != -1) {
+		return;
+	}
+	iclickerHandledResponses.push(resp);
 	console.info("pollResponse", resp);
 	// clicker_id, click_time, response, seq_num
 	clickerNewRemote(resp.clicker_id)
@@ -303,14 +324,20 @@ hitKey = function(keyName) {
 		console.error("Invalid keyName", keyName);
 		return;
 	}
-	GameBoyKeyDown(keyName);
+	if ((keyHoldKey[keyName] && gameConfig['holdKey'] && currentlyHitList[keyName] == 0) ||
+		(!keyHoldKey[keyName]) || !(gameConfig['holdkey'])) {
+		GameBoyKeyDown(keyName);
+	}
 	if (gameControlObjs[keyName] != null) {
 		gameControlObjs[keyName].classList.add('hit');
 	}
 	currentlyHitList[keyName]++;
+	console.debug("chit+",JSON.stringify(currentlyHitList));
 	setTimeout(function() {
 		currentlyHitList[keyName]--;
-		if (currentlyHitList[keyName] == 0) {
+		console.debug("chit-",JSON.stringify(currentlyHitList));
+		if ((currentlyHitList[keyName] == 0 && keyHoldKey[keyName] && gameConfig['holdKey']) ||
+		    (!keyHoldKey[keyName]) || (!gameConfig['holdKey'])) {
 			GameBoyKeyUp(keyName);
 			if (gameControlObjs[keyName] != null) {
 				gameControlObjs[keyName].classList.remove('hit');
@@ -379,6 +406,7 @@ backButton = function() {
 	$(".connect-popup").style.display = '';
 	$(".loading").style.display = '';
 	$("#rom-selector").innerHTML = ''; // prevent dups
+	socket.onmessage = socket.onopen = socket = null;
 	$(".section#welcome").style.display = 'block';
 
 }
