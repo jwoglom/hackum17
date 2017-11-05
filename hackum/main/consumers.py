@@ -29,11 +29,18 @@ def ws_message(message):
         try:
             start_poll(msg['poll_type'], msg['channel'], msg['name'].upper())
         except Exception as e:
-            send_message({
-                'type': 'start_poll_error',
-                'text': str(e)
-            })
-            raise e
+            print("str(e) = ", str(e))
+            if "requested resource is in use" in str(e):
+                send_message({
+                    'type': 'poll_init',
+                    'status': 'already_running'
+                })
+            else:
+                send_message({
+                    'type': 'start_poll_error',
+                    'text': str(e)
+                })
+                raise e
     elif mtype == "stop_poll":
         print("StopPoll received:", message.content)
         ws_stop_poll(message)

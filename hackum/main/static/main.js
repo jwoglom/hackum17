@@ -46,6 +46,7 @@ var iclickerConfig;
 var gameConfig;
 
 var iclickerRemotes = [];
+var iclickerHistory = [];
 
 $("#welcome #start-button").onclick = function() {
 	$(".section#welcome").style.display = 'none';
@@ -143,8 +144,9 @@ handleMessage = function(data) {
 		};
 
 		$("#loading-info").innerHTML += (statuses[data.status] == null ? data.status : statuses[data.status])+"\n";
+		if (data.status == 'already_running') console.log("Server says already started!!");
 
-		if (data.status == 'started') {
+		if (data.status == 'started' || data.status == 'already_running') {
 			updateUI();
 			$(".connect-popup").style.display = 'block';
 			$("#game .loading").style.display = 'none';
@@ -181,6 +183,12 @@ clickerNewRemote = function(cid) {
 		iclickerRemotes.push(cid);
 		updateUI();
 		addRemoteAction("New clicker joined!", cid);
+		$(".remote-count").classList.add('hit');
+		setTimeout(function() {
+			$(".remote-count").classList.remove('hit');
+		}, 1000);
+
+		iclickerHistory[cid] = [];
 	}
 }
 
@@ -193,6 +201,10 @@ handlePollResponse = function(resp) {
 	if ((""+resp.response).length > 0) {
 		addRemoteAction("Input: "+resp.response, resp.clicker_id);
 
+		iclickerHistory[resp.clicker_id].push({
+			"time": new Date(),
+			"response": resp.response
+		});
 
 		var ctrlOp = {};
 		for (btn in gameRomConfig['controlMap']) {
@@ -263,4 +275,20 @@ initGame = function() {
 	if (gameRomConfig['platform'] == 'gameboy') {
     	windowingInitialize(gameRomConfig['romFile']);
     }
+}
+
+backButton = function() {
+	if (gameRomConfig != null) {
+		if (gameRomConfig['platform'] == 'gameboy') {
+			pause();
+		}
+	}
+
+	$(".section#setup").style.display = 'none';
+	$(".section#game").style.display = 'none';
+	$(".connect-popup").style.display = '';
+	$(".loading").style.display = '';
+	$("#rom-selector").innerHTML = ''; // prevent dups
+	$(".section#welcome").style.display = 'block';
+
 }

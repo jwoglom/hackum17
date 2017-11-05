@@ -48,6 +48,9 @@ input.iclicker-channel {
     text-align: center;
     width: 150px;
 }
+.remote-count.hit {
+    background-color: #00E676;
+}
 
 #ui-remote-count {
     font-size: 42px;
@@ -135,4 +138,11 @@ table.d-pad-table {
 	width: 100vw;
 	height: 3vh;
 	padding-top: 5px;
+}
+
+.back-button-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 2vh;
 }
