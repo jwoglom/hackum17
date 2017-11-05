@@ -87,6 +87,19 @@ var gamePlatforms = {
 	}
 };
 
+var currentlyHitList = {
+	"up": 0,
+	"down": 0,
+	"left": 0,
+	"right": 0,
+	"a": 0,
+	"b": 0,
+	"select": 0,
+	"start": 0
+};
+
+var keyHitTime = 250;
+
 var gameRomConfig; // set dynamically
 var gameControlObjs;
 
@@ -284,19 +297,34 @@ handlePollResponse = function(resp) {
 
 
 }
-
 hitKey = function(keyName) {
 	console.info("hitKey", keyName);
+	if (currentlyHitList[keyName] == null) {
+		console.error("Invalid keyName", keyName);
+		return;
+	}
 	GameBoyKeyDown(keyName);
 	if (gameControlObjs[keyName] != null) {
 		gameControlObjs[keyName].classList.add('hit');
 	}
+	currentlyHitList[keyName]++;
 	setTimeout(function() {
-		GameBoyKeyUp(keyName);
-		if (gameControlObjs[keyName] != null) {
-			gameControlObjs[keyName].classList.remove('hit');
+		currentlyHitList[keyName]--;
+		if (currentlyHitList[keyName] == 0) {
+			GameBoyKeyUp(keyName);
+			if (gameControlObjs[keyName] != null) {
+				gameControlObjs[keyName].classList.remove('hit');
+			}
 		}
-	}, 150);
+	}, keyHitTime);
+}
+
+resetCurrentlyHitList = function() {
+	for (n in currentlyHitList) {
+		if (n != null) {
+			currentlyHitList[n] = 0;
+		}
+	}
 }
 
 setUIControls = function() {
@@ -317,6 +345,7 @@ setUIControls = function() {
 }
 
 initGame = function() {
+	resetCurrentlyHitList();
 	console.debug("gameConfig", gameConfig);
 	gameRomConfig = gameRomConfigs[gameConfig['romName']]
 	gameControlObjs = {
