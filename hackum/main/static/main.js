@@ -31,6 +31,54 @@ var gameRomConfigs = {
 			"select": null,
 			"start": "E"
 		}
+	},
+	"pokemong": {
+		"romName": "pokemong",
+		"romFile": "/static/roms/pokemong.txt",
+		"gameTitle": "Pokemon Gold",
+		"platform": "gameboy",
+		"controlMap": {
+			"up": "A",
+			"down": "B",
+			"left": "C",
+			"right": "D",
+			"a": null,
+			"b": null,
+			"select": null,
+			"start": "E"
+		}
+	},
+	"pokemony": {
+		"romName": "pokemony",
+		"romFile": "/static/roms/pokemony.txt",
+		"gameTitle": "Pokemon Yellow",
+		"platform": "gameboy",
+		"controlMap": {
+			"up": "A",
+			"down": "B",
+			"left": "C",
+			"right": "D",
+			"a": null,
+			"b": null,
+			"select": null,
+			"start": "E"
+		}
+	},
+	"marioland": {
+		"romName": "marioland",
+		"romFile": "/static/roms/marioland.txt",
+		"gameTitle": "Super Mario Land",
+		"platform": "gameboy",
+		"controlMap": {
+			"up": null,
+			"down": "E",
+			"left": "C",
+			"right": "D",
+			"a": "A",
+			"b": "B",
+			"select": null,
+			"start": null
+		}
 	}
 };
 var gamePlatforms = {
@@ -47,6 +95,19 @@ var gameConfig;
 
 var iclickerRemotes = [];
 var iclickerHistory = [];
+(function() {
+	var games = ["<b>Pokemon</b>", "<b>Pokemon</b>"];
+	for (n in gameRomConfigs) {
+		if (n != null) {
+			var t = gameRomConfigs[n]['gameTitle'];
+			if (t.toLowerCase().indexOf('pokemon') == -1) games.push(t);
+		}
+	}
+    var gamei = -1;
+    setInterval(function() {
+     $("#welcome h1 span.pokemon").innerHTML = games[(++gamei)%games.length];;
+   }, 1500);
+})();
 
 $("#welcome #start-button").onclick = function() {
 	$(".section#welcome").style.display = 'none';
