@@ -13,4 +13,4 @@ A project developed with Python and JavaScript that allows students with iClicke
 6. Run redis in WSL: `redis-server`
 7. Run `./manage.py runserver`
 
-For full installation instructions, view our helpful [https://github.com/jwoglom/hackum17/wiki](wiki pages).
+For full installation instructions, view our helpful [wiki pages](https://github.com/jwoglom/hackum17/wiki).
