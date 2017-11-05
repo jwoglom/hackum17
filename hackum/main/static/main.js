@@ -192,6 +192,7 @@ $("#setup #start-button").onclick = function() {
 	$("body").classList.remove("with-gboy");
 	$(".section#setup").style.display = 'none';
 	$(".section#game").style.display = 'block';
+
 	var channel = $("#iclicker-channel").value.toLowerCase();
 	var iclickerMode = $("#iclicker-mode").value;
 	var gameMode = $("#game-mode").value;
@@ -436,6 +437,12 @@ initGame = function() {
 		"select": $(".d-pad-table .select-button"),
 		"start": $(".d-pad-table .start-button"),	
 	};
+
+	$("#emulation-speed").onchange = function() {
+		var es = $("#emulation-speed");
+		$("#emulation-speed-text").innerHTML = parseInt(parseFloat(es.value)*100)/100;
+		gameboy.setSpeed(parseFloat(es.value));
+	}
 
 
 	resetUIControls();
