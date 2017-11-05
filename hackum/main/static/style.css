@@ -132,6 +132,11 @@ table.d-pad-table {
     height: 50vh;
 }
 
+.chart-container {
+    width: 100%;
+    height: 25vh;
+}
+
 #footer {
 	position: fixed;
 	bottom: 0;

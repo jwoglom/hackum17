@@ -9,6 +9,8 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="/static/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="/static/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+
   <script type="text/javascript" src="/static/GameBoy-Online/js/other/windowStack.js"></script>
   <script type="text/javascript" src="/static/GameBoy-Online/js/other/terminal.js"></script>
   <script type="text/javascript" src="/static/GameBoy-Online/js/other/gui.js"></script>
@@ -20,9 +22,19 @@
   <script type="text/javascript" src="/static/GameBoy-Online/js/other/resize.js"></script>
   <script type="text/javascript" src="/static/GameBoy-Online/js/GameBoyCore.js"></script>
   <script type="text/javascript" src="/static/GameBoy-Online/js/GameBoyIO.js"></script>
+  <script type="text/javascript" src="/static/Chart.bundle.js"></script>
   <script type="text/javascript">
     var DEBUG_MESSAGES = false;
     var DEBUG_WINDOWING = false;
+  </script>
+
+   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+   <script src="/static/materialize.js"></script>
+   <script type="text/javascript">
+    jQuery.noConflict();
+    jQuery(document).ready(function() {
+      jQuery('select').material_select();
+    });
   </script>
 </head>
 <body>
@@ -90,7 +102,7 @@
 
               <center>
                 <h5>Channel:</h5>
-                <input type="text" maxlength="2" value="AB" pattern="[A-Da-d]{2}" class="iclicker-channel" id="iclicker-channel" />
+                <input type="text" maxlength="2" value="DD" pattern="[A-Da-d]{2}" class="iclicker-channel" id="iclicker-channel" />
               </center>
 
             </div>
@@ -403,10 +415,12 @@
             </div>
 
             <div class="col s12 m3">
+              <center>
               <div class="remote-count">
                 <span id="ui-remote-count">0</span><br />
                 Connected iClickers
               </div>
+              </center>
               <br />
 
               <div class="remote-actions">
@@ -416,10 +430,14 @@
               </div>
 
               <br />
-              <div class="mode-display">
+              
+              <div class="mode-display" style="display:none;position:absolute;left:-999px">
                 Game Mode:<br />
                 <div id="ui-mode"></div>
               </div>
+            
+            <div class="chart-container">
+              <canvas id="chartCanvas"></canvas>
             </div>
           </div>
         </div>
@@ -436,15 +454,7 @@
    </div>
 
    <!--  Scripts-->
-   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-   <script src="/static/materialize.js"></script>
-   <script type="text/javascript">
-    jQuery.noConflict();
-    jQuery(document).ready(function() {
-      jQuery('select').material_select();
-    });
-  </script>
-  <script src="/static/main.js"></script>
   
+  <script src="/static/main.js"></script>
 </body>
 </html>

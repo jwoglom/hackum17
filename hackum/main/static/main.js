@@ -102,6 +102,16 @@ var currentlyHitList = {
 	"select": 0,
 	"start": 0
 };
+var totalHitList = {
+	"up": 0,
+	"down": 0,
+	"left": 0,
+	"right": 0,
+	"a": 0,
+	"b": 0,
+	"select": 0,
+	"start": 0
+};
 var keyHoldKey = {
 	"up": true,
 	"down": true,
@@ -111,7 +121,7 @@ var keyHoldKey = {
 	"b": false,
 	"select": false,
 	"start": false
-}
+};
 
 var keyHitTime = 200;
 
@@ -332,6 +342,7 @@ hitKey = function(keyName) {
 		gameControlObjs[keyName].classList.add('hit');
 	}
 	currentlyHitList[keyName]++;
+	totalHitList[keyName]++;
 	console.debug("chit+",JSON.stringify(currentlyHitList));
 	setTimeout(function() {
 		currentlyHitList[keyName]--;
@@ -346,10 +357,11 @@ hitKey = function(keyName) {
 	}, keyHitTime);
 }
 
-resetCurrentlyHitList = function() {
+resetHitList = function() {
 	for (n in currentlyHitList) {
 		if (n != null) {
 			currentlyHitList[n] = 0;
+			totalHitList[n] = 0;
 		}
 	}
 }
@@ -372,7 +384,7 @@ setUIControls = function() {
 }
 
 initGame = function() {
-	resetCurrentlyHitList();
+	resetHitList();
 	console.debug("gameConfig", gameConfig);
 	gameRomConfig = gameRomConfigs[gameConfig['romName']]
 	gameControlObjs = {
@@ -388,6 +400,9 @@ initGame = function() {
 	};
 
 	setUIControls();
+
+	generateChart();
+	setInterval(updateChart, 100);
 
 	if (gameRomConfig['platform'] == 'gameboy') {
     	windowingInitialize(gameRomConfig['romFile']);
@@ -407,6 +422,81 @@ backButton = function() {
 	$(".loading").style.display = '';
 	$("#rom-selector").innerHTML = ''; // prevent dups
 	socket.onmessage = socket.onopen = socket = null;
+	$("#ui-remote-count").innerHTML = '0';
+	resetHitList();
+	iclickerHandledResponses = [];
+	iclickerRemotes = [];
+	iclickerHistory = [];
+	$("#remote-actions").innerHTML = '';
 	$(".section#welcome").style.display = 'block';
 
+}
+
+var chart;
+generateChart = function() {
+    var color = Chart.helpers.color;
+    window.chartColors = {
+		red: 'rgb(255, 99, 132)',
+		orange: 'rgb(255, 159, 64)',
+		yellow: 'rgb(255, 205, 86)',
+		green: 'rgb(75, 192, 192)',
+		blue: 'rgb(54, 162, 235)',
+		purple: 'rgb(153, 102, 255)',
+		grey: 'rgb(201, 203, 207)'
+	};
+
+	chartData = generateChartData();
+
+
+    var ctx = document.getElementById("chartCanvas").getContext("2d");
+    chart = new Chart(ctx, {
+      type: 'horizontalBar',
+      data: chartData,
+      options: {
+          // Elements options apply to all of the options unless overridden in a dataset
+          // In this case, we are setting the border of each horizontal bar to be 2px wide
+          elements: {
+              rectangle: {
+                  borderWidth: 2,
+              }
+          },
+          responsive: true,
+          legend: {
+              position: 'right',
+          },
+          title: {
+              display: true,
+              text: 'Total Key Hits'
+          }
+      }
+  });
+
+}
+
+generateChartData = function() {
+	var color = Chart.helpers.color;
+    var keys = ["A", "B", "Up", "Down", "Left", "Right", "Select", "Start"]
+    var dataTotal = [];
+    for (var i=0; i<keys.length; i++) {
+      var ky = keys[i];
+      dataTotal[i] = totalHitList[ky.toLowerCase()];
+    }
+    var chartData = {
+      labels: keys,
+      datasets: [{
+        'label': 'All Presses',
+        backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+        borderColor: window.chartColors.red,
+        borderWidth: 1,
+        data: dataTotal
+      }]
+    };
+    return chartData;
+}
+
+updateChart = function() {
+	var ndata = generateChartData();
+	chart.data.labels = ndata.labels;
+	chart.data.datasets = ndata.datasets;
+	chart.update({'duration': 0});
 }
