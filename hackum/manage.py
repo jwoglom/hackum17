@@ -19,4 +19,6 @@ if __name__ == "__main__":
                 "forget to activate a virtual environment?"
             )
         raise
+    if '--nostatic' not in sys.argv:
+        sys.argv.append('--nostatic')
     execute_from_command_line(sys.argv)

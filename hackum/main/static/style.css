@@ -113,6 +113,16 @@ table.d-pad-table {
     background-color: #4CAF50;
 }
 
+.d-pad-table td.hit,
+.d-pad-table td.present.hit {
+    background-color: #00E676;
+}
+
+#mainCanvas {
+    width: 50vw;
+    height: 50vh;
+}
+
 #footer {
 	position: fixed;
 	bottom: 0;

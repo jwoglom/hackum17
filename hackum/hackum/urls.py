@@ -15,8 +15,19 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.contrib.staticfiles.views import serve as serve_static
+from django.views.decorators.cache import never_cache
+from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('main.urls', namespace='main'))
+    url(r'^', include('main.urls', namespace='main')),
+
 ]
+
+
+
+if settings.DEBUG:
+    urlpatterns += [
+        url(r'^static/(?P<path>.*)$', never_cache(serve_static)),
+    ]

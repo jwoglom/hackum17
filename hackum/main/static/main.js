@@ -133,31 +133,56 @@ handlePollResponse = function(resp) {
 	// empty send
 	if ((""+resp.response).length > 0) {
 		addRemoteAction("Input: "+resp.response, resp.clicker_id);
+
+
+		var ctrlOp = {};
+		for (btn in gameControls) {
+			if (btn != null) {
+				ctrlOp[gameControls[btn]] = btn;
+			}
+		}
+
+		var gcontrol = ctrlOp[resp.response];
+		console.log("resp:"+resp.response+" ctrl:"+gcontrol);
+		if (gcontrol != null) {
+			hitKey(gcontrol);
+		}
 	}
+
+
+
 }
 
+hitKey = function(keyName) {
+	console.info("hitKey", keyName);
+	GameBoyKeyDown(keyName);
+	if (gameControlObjs[keyName] != null) {
+		gameControlObjs[keyName].classList.add('hit');
+	}
+	setTimeout(function() {
+		GameBoyKeyUp(keyName);
+		if (gameControlObjs[keyName] != null) {
+			gameControlObjs[keyName].classList.remove('hit');
+		}
+	}, 150);
+}
 
 var gameControlMap = {
 	"tetris": {
-		"uArrow": null,
-		"dArrow": null,
-		"lArrow": "C",
-		"rArrow": "D",
-		"aBtn": "A",
-		"bBtn": "B"
+		"up": null,
+		"down": "E",
+		"left": "C",
+		"right": "D",
+		"a": "A",
+		"b": "B"
 	}
 }
 
+var gameControlObjs;
+
 var gameControls;
 setUIControls = function() {
-	var objs = {
-		"uArrow": $(".d-pad-table .up-arrow"),
-		"dArrow": $(".d-pad-table .down-arrow"),
-		"lArrow": $(".d-pad-table .left-arrow"),
-		"rArrow": $(".d-pad-table .right-arrow"),
-		"aBtn": $(".d-pad-table .a-button"),
-		"bBtn": $(".d-pad-table .b-button")
-	};
+	var objs = gameControlObjs;
 
 
 	for (btn in gameControls) {
@@ -177,6 +202,17 @@ setUIControls = function() {
 initGame = function() {
 	console.debug("gameConfig", gameConfig);
 	gameControls = gameControlMap[gameConfig['rom']];
+	gameControlObjs = {
+		"up": $(".d-pad-table .up-arrow"),
+		"down": $(".d-pad-table .down-arrow"),
+		"left": $(".d-pad-table .left-arrow"),
+		"right": $(".d-pad-table .right-arrow"),
+		"a": $(".d-pad-table .a-button"),
+		"b": $(".d-pad-table .b-button")
+	};
 
 	setUIControls();
+
+
+    windowingInitialize();
 }
