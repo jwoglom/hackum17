@@ -461,8 +461,9 @@ generateChart = function() {
               }
           },
           responsive: true,
+          maintainAspectRatio: false,
           legend: {
-              position: 'right',
+              position: 'bottom',
           },
           title: {
               display: true,
