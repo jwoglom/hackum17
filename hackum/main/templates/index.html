@@ -154,7 +154,7 @@
         <div class="loading light-green lighten-2">
           <div style="padding: 10px">
             <h4>Connecting...</h4>
-            <pre id="loading-info"></pre>
+            <pre id="loading-info" style="max-height: 200px;overflow:auto"></pre>
           </div>
         </div>
 
@@ -162,18 +162,18 @@
           <div style="padding: 10px" class="container">
             <div class="row"><h2>To pair your remotes...</h2></div>
             <div class="row">
-              <div class="col s12 m4 iclicker-background">
+              <div class="col s12 m6 iclicker-background" style="transform: rotate(270deg)">
                 &nbsp;
 
               </div>
-              <div class="col s12 m8" style="font-size: 1.5em">
+              <div class="col s12 m6" style="font-size: 1.5em">
                 <ul>
                   <li>Turn the device on using the <b>POWER</b> button</li>
                   <li>Hold <b>POWER</b> for 3 seconds</li>
                   <li>Using the buttons, enter code: <br />
                     <center><span style="font-size: 50px" id="ui-clicker-channel"></span></center></li>
-                  <li>Hit <b>DELETE</b> followed by <b>SEND</b> to pair the remote</li>
-                  <li>You can continue to connect remotes after this screen by connecting to the channel and inputting an answer with either the buttons or up and down arrow keys</li>
+                  <li>Hit <b>DELETE</b> several times to clear out the input.</li>
+                  <li>Hold the device as shown in the picture.</li>
                 </ul>
                 <br />
                 <button class="btn-large waves-effect waves-light blue" onclick="$('.connect-popup').style.display='none'">&nbsp; OK &nbsp;</button>
@@ -397,7 +397,7 @@
 
               <br />
               <h5>Controls:</h5>
-              <table class='d-pad-table' border=1>
+              <table class='d-pad-table' border=1 style="zoom: 1.5">
                 <tr>
                   <td></td>
                   <td class='h up-arrow' onclick="hitKey('up')">.</td>

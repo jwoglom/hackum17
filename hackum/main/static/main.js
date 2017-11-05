@@ -8,12 +8,12 @@ var gameRomConfigs = {
 		"gameTitle": "Tetris",
 		"platform": "gameboy",
 		"controlMap": {
-			"up": null,
-			"down": "E",
-			"left": "C",
-			"right": "D",
-			"a": "A",
-			"b": "B"
+			"up": "F",
+			"down": "C",
+			"left": "A",
+			"right": "B",
+			"a": "E",
+			"b": "D"
 		},
 		"holdKey": false
 	},
@@ -74,14 +74,12 @@ var gameRomConfigs = {
 		"gameTitle": "Super Mario Land",
 		"platform": "gameboy",
 		"controlMap": {
-			"up": null,
-			"down": "E",
-			"left": "C",
-			"right": "D",
-			"a": "A",
-			"b": "B",
-			"select": null,
-			"start": null
+			"up": "F",
+			"down": "C",
+			"left": "A",
+			"right": "B",
+			"a": "E",
+			"b": "D"
 		},
 		"holdKey": false
 	},
@@ -140,7 +138,7 @@ var keyHoldKey = {
 	"start": false
 };
 
-var keyHitTime = 200;
+var keyHitTime = 150;
 var oneCharacterResponses = true; // truncate manual responses to one character
 var allowingiClickerInput = true;
 
@@ -201,7 +199,7 @@ $("#setup #start-button").onclick = function() {
 	iclickerConfig = {
 		"poll_type": iclickerMode,
 		"channel": channel,
-		"name": rom.toUpperCase().substring(0, 8)
+		"name": "IC PLAYS" //rom.toUpperCase().substring(0, 8)
 	};
 
 	gameConfig = {
@@ -315,10 +313,10 @@ clickerNewRemote = function(cid) {
 }
 
 handlePollResponse = function(resp) {
-	if (iclickerHandledResponses.indexOf(resp) != -1) {
+	/*if (iclickerHandledResponses.indexOf(resp) != -1) {
 		return;
 	}
-	iclickerHandledResponses.push(resp);
+	iclickerHandledResponses.push(resp);*/
 
 
 	if (oneCharacterResponses && resp.response.length > 1) {
@@ -370,8 +368,8 @@ hitKey = function(keyName) {
 		console.error("Invalid keyName", keyName);
 		return;
 	}
-	if ((keyHoldKey[keyName] && gameConfig['holdKey'] && currentlyHitList[keyName] == 0) ||
-		(!keyHoldKey[keyName]) || !(gameConfig['holdkey'])) {
+	if (!(gameConfig['holdkey']) || (!keyHoldKey[keyName]) ||
+		(keyHoldKey[keyName] && gameConfig['holdKey'] && currentlyHitList[keyName] == 0)) {
 		GameBoyKeyDown(keyName);
 	}
 	if (gameControlObjs[keyName] != null) {
@@ -379,12 +377,12 @@ hitKey = function(keyName) {
 	}
 	currentlyHitList[keyName]++;
 	totalHitList[keyName]++;
-	console.debug("chit+",JSON.stringify(currentlyHitList));
+	//console.debug("chit+",JSON.stringify(currentlyHitList));
 	setTimeout(function() {
 		currentlyHitList[keyName]--;
-		console.debug("chit-",JSON.stringify(currentlyHitList));
-		if ((currentlyHitList[keyName] == 0 && keyHoldKey[keyName] && gameConfig['holdKey']) ||
-		    (!keyHoldKey[keyName]) || (!gameConfig['holdKey'])) {
+		//console.debug("chit-",JSON.stringify(currentlyHitList));
+		if ((!gameConfig['holdKey']) || (!keyHoldKey[keyName]) || 
+			(currentlyHitList[keyName] == 0 && keyHoldKey[keyName] && gameConfig['holdKey'])) {
 			GameBoyKeyUp(keyName);
 			if (gameControlObjs[keyName] != null) {
 				gameControlObjs[keyName].classList.remove('hit');
