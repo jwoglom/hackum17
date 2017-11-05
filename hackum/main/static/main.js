@@ -189,6 +189,7 @@ $("#setup #iclicker-channel").addEventListener("keypress", function(evt) {
 });
 
 $("#setup #start-button").onclick = function() {
+	$("body").classList.remove("with-gboy");
 	$(".section#setup").style.display = 'none';
 	$(".section#game").style.display = 'block';
 	var channel = $("#iclicker-channel").value.toLowerCase();
@@ -443,6 +444,8 @@ initGame = function() {
 	generateChart();
 	setInterval(updateChart, 100);
 
+	addRemoteAction("Started "+gameRomConfig["gameTitle"]+"", "");
+
 	if (gameRomConfig['platform'] == 'gameboy') {
     	windowingInitialize(gameRomConfig['romFile']);
     }
@@ -470,6 +473,7 @@ backButton = function() {
 	$("#remote-actions").innerHTML = '';
 	$(".above-e-message").style.display = 'none';
 	$(".section#welcome").style.display = 'block';
+	$("body").classList.add("with-gboy");
 
 }
 

@@ -1,8 +1,4 @@
 body {
-    background: url(/static/gboy.png);
-    background-repeat: no-repeat;
-    background-position: top center;
-    background-color: #c1c3c5;
     position: absolute;
     top: 0;
     left: 0;
@@ -10,7 +6,15 @@ body {
     height: 100vh;
 }
 
-.light-green.lighten-4 {
+body.with-gboy {
+
+    background: url(/static/gboy.png);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-color: #c1c3c5;
+}
+
+.green-gray {
     background-color: rgba(220, 237, 200, 0.7) !important;
 }
 
