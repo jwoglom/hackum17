@@ -1,10 +1,66 @@
 window.$ = document.querySelector.bind(document);
 window.$$ = document.querySelectorAll.bind(document);
 
+var gameRomConfigs = {
+	"tetris": {
+		"romName": "tetris",
+		"romFile": "/static/roms/tetris.txt",
+		"gameTitle": "Tetris",
+		"platform": "gameboy",
+		"controlMap": {
+			"up": null,
+			"down": "E",
+			"left": "C",
+			"right": "D",
+			"a": "A",
+			"b": "B"
+		}
+	},
+	"snake": {
+		"romName": "snake",
+		"romFile": "/static/roms/snake.txt",
+		"gameTitle": "Snake",
+		"platform": "gameboy",
+		"controlMap": {
+			"up": "A",
+			"down": "B",
+			"left": "C",
+			"right": "D",
+			"a": null,
+			"b": null,
+			"select": null,
+			"start": "E"
+		}
+	}
+};
+var gamePlatforms = {
+	"gameboy": {
+		"platformTitle": "Game Boy"
+	}
+};
+
+var gameRomConfig; // set dynamically
+var gameControlObjs;
+
+var iclickerConfig;
+var gameConfig;
+
+var iclickerRemotes = [];
+
 $("#welcome #start-button").onclick = function() {
 	$(".section#welcome").style.display = 'none';
 	$(".section#setup").style.display = 'block';
+	var sel = $("#rom-selector");
+	for (romName in gameRomConfigs) {
+		if (romName != null) {
+			var cfg = gameRomConfigs[romName];
+			var pfm = gamePlatforms[cfg['platform']];
+			sel.innerHTML += '<option value="' + cfg['romName'] + '">' + cfg['gameTitle'] + ' (' + pfm['platformTitle'] + ')';
+		}
+	}
+	jQuery('select#rom-selector').material_select();
 }
+
 
 $("#setup #iclicker-channel").addEventListener("keypress", function(evt) {
     if (!(evt.which >= 65 && evt.which <= 68) && !(evt.which >= 97 && evt.which <= 100)) {
@@ -12,8 +68,6 @@ $("#setup #iclicker-channel").addEventListener("keypress", function(evt) {
     }
 });
 
-var iclickerConfig;
-var gameConfig;
 $("#setup #start-button").onclick = function() {
 	$(".section#setup").style.display = 'none';
 	$(".section#game").style.display = 'block';
@@ -30,7 +84,7 @@ $("#setup #start-button").onclick = function() {
 	gameConfig = {
 		"mode": gameMode,
 		"platform": "gameboy",
-		"rom": rom
+		"romName": rom
 	};
 
 	initWebsockets(function() {
@@ -124,7 +178,6 @@ clickerNewRemote = function(cid) {
 	}
 }
 
-var iclickerRemotes = [];
 handlePollResponse = function(resp) {
 	console.info("pollResponse", resp);
 	// clicker_id, click_time, response, seq_num
@@ -136,15 +189,15 @@ handlePollResponse = function(resp) {
 
 
 		var ctrlOp = {};
-		for (btn in gameControls) {
+		for (btn in gameRomConfig['controlMap']) {
 			if (btn != null) {
-				ctrlOp[gameControls[btn]] = btn;
+				ctrlOp[gameRomConfig['controlMap'][btn]] = btn;
 			}
 		}
 
 		var gcontrol = ctrlOp[resp.response];
-		console.log("resp:"+resp.response+" ctrl:"+gcontrol);
 		if (gcontrol != null) {
+			console.log("resp:"+resp.response+" ctrl:"+gcontrol);
 			hitKey(gcontrol);
 		}
 	}
@@ -167,29 +220,15 @@ hitKey = function(keyName) {
 	}, 150);
 }
 
-var gameControlMap = {
-	"tetris": {
-		"up": null,
-		"down": "E",
-		"left": "C",
-		"right": "D",
-		"a": "A",
-		"b": "B"
-	}
-}
-
-var gameControlObjs;
-
-var gameControls;
 setUIControls = function() {
 	var objs = gameControlObjs;
 
 
-	for (btn in gameControls) {
+	for (btn in gameRomConfig['controlMap']) {
 		if (btn != null) {
 			objs[btn].classList.remove('present');
-			if (gameControls[btn] != null) {
-				objs[btn].innerHTML = gameControls[btn];
+			if (gameRomConfig['controlMap'][btn] != null) {
+				objs[btn].innerHTML = gameRomConfig['controlMap'][btn];
 				objs[btn].classList.add('present');
 			}
 		}
@@ -198,21 +237,24 @@ setUIControls = function() {
 
 }
 
-
 initGame = function() {
 	console.debug("gameConfig", gameConfig);
-	gameControls = gameControlMap[gameConfig['rom']];
+	gameRomConfig = gameRomConfigs[gameConfig['romName']]
 	gameControlObjs = {
 		"up": $(".d-pad-table .up-arrow"),
 		"down": $(".d-pad-table .down-arrow"),
 		"left": $(".d-pad-table .left-arrow"),
 		"right": $(".d-pad-table .right-arrow"),
 		"a": $(".d-pad-table .a-button"),
-		"b": $(".d-pad-table .b-button")
+		"b": $(".d-pad-table .b-button"),
+		"select": $(".d-pad-table .select-button"),
+		"start": $(".d-pad-table .start-button"),
+		
 	};
 
 	setUIControls();
 
-
-    windowingInitialize();
+	if (gameRomConfig['platform'] == 'gameboy') {
+    	windowingInitialize(gameRomConfig['romFile']);
+    }
 }

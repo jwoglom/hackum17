@@ -12,7 +12,7 @@ var keyZones = [
 	["select", [16]],
 	["start", [13]]
 ];
-function windowingInitialize() {
+function windowingInitialize(romFile) {
 	cout("windowingInitialize() called.", 0);
 	windowStacks[0] = windowCreate("GameBoy", true);
 	windowStacks[1] = windowCreate("terminal", false);
@@ -63,7 +63,7 @@ function windowingInitialize() {
 	    }
 	}
 	var client = new HttpClient();
-	client.get("/static/roms/tetris.txt", function(response) {
+	client.get(romFile, function(response) {
 	    // do something with response
 	    datauri = response;
 	    if (datauri != null && datauri.length > 0) {
